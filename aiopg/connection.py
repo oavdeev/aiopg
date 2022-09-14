@@ -76,7 +76,8 @@ class Connection:
 
         kwargs['async_'] = kwargs.pop('async', True)
         kwargs.pop('loop', None)  # backward compatibility
-        self._conn = psycopg2.connect(dsn, **kwargs)
+        connect_fn = kwargs.pop('connect_fn', psycopg2.connect)
+        self._conn = connect_fn(dsn, **kwargs)
 
         self._dsn = self._conn.dsn
         assert self._conn.isexecuting(), "Is conn an async at all???"
